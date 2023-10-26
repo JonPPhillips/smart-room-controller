@@ -42,6 +42,7 @@ int heatOn;
 int i;
 int currTime;
 int prevTime;
+int bulbState;
 char degree = 0xF8;
 bool heat;
 bool cool;
@@ -115,6 +116,7 @@ noTone(BUZZER);
 
 
 
+
 if(tempF<heatOn){
     heat = true;
 }
@@ -171,41 +173,48 @@ if(leftButton.isClicked()){
     lftIsclicked = !lftIsclicked;     
 }
 
-
-if(lftIsclicked){
-    for(i=1;i<7;i++){
-        setHue(4,true,225,100,0.33);
-    }
-    
-
-    
-
+ if(rightButton.isClicked()){
+    rtIsclicked = !rtIsclicked;
 }
-    else{
-        for(i=1;i<7;i++){
-            setHue(4,false);
-        }
-
-    }
 
 
-if(lftIsclicked);
-    if(rightButton.isClicked()){
-        rtIsclicked = !rtIsclicked;
-    }
+if((!lftIsclicked)&&(!rtIsclicked)){
+    setHue(4,false);
+}
 
-    if(rtIsclicked){
-        for(i=1;i<8;i++){
-            setHue(4,true, HueRainbow[random(8,0)],50,255);
-        }
-    }
-    else{
-        for(i=1;i<8;i++){
-            setHue(4,true,255,100,0.33);
-        }
-    }
+if((!lftIsclicked)&&(rtIsclicked)){
+    setHue(4,false);
+}
+
+if((lftIsclicked)&&(!rtIsclicked)){
+    setHue(4,true,225,100,0.33);
+}
+
+if((lftIsclicked)&&(rtIsclicked)){
+     setHue(4,true,HueRed,50,255);
+}
+
+
+}    
+    
+ 
+        
+
+        
+
+  
+ 
+     
+     
+
+
+
+     
+   
 
 
     
 
-}
+    
+
+
