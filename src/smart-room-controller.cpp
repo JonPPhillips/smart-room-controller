@@ -18,7 +18,7 @@
 
 
 
-SYSTEM_MODE(MANUAL);
+SYSTEM_MODE(SEMI_AUTOMATIC);
 
 
 
@@ -42,6 +42,8 @@ int i;
 int currTime;
 int prevTime;
 int bulbState;
+int counterCool;
+int counterHeat;
 float t;
 char degree = 0xF8;
 bool heat;
@@ -85,6 +87,7 @@ void setup() {
     if (bmeStatus == false){
         Serial.print("BME failed to start");
     }
+    delay(5000);
     
     display.begin(SSD1306_SWITCHCAPVCC,0x3C);
     display.setTextColor(WHITE);
@@ -140,26 +143,41 @@ if(encRead>96){
 }
 
 if(heat){
-  
     wemoWrite(wemoHeat,HIGH);
     pixel.setPixelColor(0,red);
     pixel.show();
-    tone(BUZZER,2000,500);
+    
 }
+
+if(heat){
+    counterHeat++;
+}
+  else{
+    counterHeat = 0;
+}
+if(counterHeat == 1){
+    tone(BUZZER, 3300,1000);
+   
+}
+
+
     
 
 if(cool){
-    t = millis()/1000.0;
-    while(t<1){
-    tone(BUZZER,2000);
-    // break;
-    }
-    noTone(BUZZER);
     wemoWrite(wemoCool,HIGH);
     pixel.setPixelColor(1,blue);
     pixel.show();
 }
-    
+if(cool){
+    counterCool++;
+  }
+  else{
+    counterCool = 0;
+  }
+if(counterCool == 1){
+    tone(BUZZER, 3300,1000);
+   
+  }
 
 if (cool==false && heat==false){
     wemoWrite(wemoCool,LOW);
@@ -191,8 +209,6 @@ if(leftButton.isClicked()){
 }
 
 
-
-
 if(lftIsclicked){
     if(rtIsclicked){
           setHue(4,true,HueRed,50,255);
@@ -201,11 +217,9 @@ if(lftIsclicked){
     else{
         setHue(4,true,255,100,0.33);
 
-    }
-    
-   
-      
-    }
+    } 
+         
+}
 
 else{
     setHue(4,false);
