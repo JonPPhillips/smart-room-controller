@@ -21,13 +21,12 @@
 SYSTEM_MODE(MANUAL);
 
 
-const int BUZZER = D13;
+
 const int PIXELCOUNT = 2;
 Adafruit_NeoPixel pixel(PIXELCOUNT, SPI1, WS2812B);
 Adafruit_BME280 bme;
 
-int OLED_RESET (D4);
-Adafruit_SSD1306 display(OLED_RESET);
+Adafruit_SSD1306 display(-1);
 
 Encoder enCoder(D8,D9);
 
@@ -43,14 +42,18 @@ int i;
 int currTime;
 int prevTime;
 int bulbState;
+float t;
 char degree = 0xF8;
 bool heat;
 bool cool;
 bool lftIsclicked;
 bool rtIsclicked;
 bool encIsclicked;
-const int wemoHeat=0;
+bool lftIson;
+const int BUZZER = D13;
+const int wemoHeat=5;
 const int wemoCool=3;
+unsigned int lastTone;
 Button leftButton (D3); 
 Button rightButton (D4);
 Button encButton (D15);
@@ -117,6 +120,8 @@ noTone(BUZZER);
 
 
 
+
+
 if(tempF<heatOn){
     heat = true;
 }
@@ -136,7 +141,7 @@ if(encRead>96){
 
 if(heat){
   
-    // wemoWrite(wemoHeat,HIGH);
+    wemoWrite(wemoHeat,HIGH);
     pixel.setPixelColor(0,red);
     pixel.show();
     tone(BUZZER,2000,500);
@@ -144,12 +149,17 @@ if(heat){
     
 
 if(cool){
-
+    t = millis()/1000.0;
+    while(t<1){
+    tone(BUZZER,2000);
+    // break;
+    }
+    noTone(BUZZER);
     wemoWrite(wemoCool,HIGH);
     pixel.setPixelColor(1,blue);
     pixel.show();
-    tone(BUZZER,1000,500);
 }
+    
 
 if (cool==false && heat==false){
     wemoWrite(wemoCool,LOW);
@@ -171,31 +181,40 @@ display.setCursor(0,0);
 
 if(leftButton.isClicked()){
     lftIsclicked = !lftIsclicked;     
+    Serial.printf("left button %i\n",lftIsclicked);
 }
+
 
  if(rightButton.isClicked()){
     rtIsclicked = !rtIsclicked;
+    Serial.printf("right button %i\n",rtIsclicked);
 }
 
 
-if((!lftIsclicked)&&(!rtIsclicked)){
+
+
+if(lftIsclicked){
+    if(rtIsclicked){
+          setHue(4,true,HueRed,50,255);
+    }
+
+    else{
+        setHue(4,true,255,100,0.33);
+
+    }
+    
+   
+      
+    }
+
+else{
     setHue(4,false);
 }
 
-if((!lftIsclicked)&&(rtIsclicked)){
-    setHue(4,false);
+    
+
 }
-
-if((lftIsclicked)&&(!rtIsclicked)){
-    setHue(4,true,225,100,0.33);
-}
-
-if((lftIsclicked)&&(rtIsclicked)){
-     setHue(4,true,HueRed,50,255);
-}
-
-
-}    
+ 
     
  
         
