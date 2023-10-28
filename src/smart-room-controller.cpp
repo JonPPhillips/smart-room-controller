@@ -18,7 +18,7 @@
 
 
 
-SYSTEM_MODE(SEMI_AUTOMATIC);
+SYSTEM_MODE(MANUAL);
 
 
 
@@ -119,12 +119,6 @@ heatOn = thermoSet-3;
 pixel.clear();
 noTone(BUZZER);
 
-
-
-
-
-
-
 if(tempF<heatOn){
     heat = true;
 }
@@ -211,18 +205,24 @@ if(leftButton.isClicked()){
 
 if(lftIsclicked){
     if(rtIsclicked){
+       
           setHue(4,true,HueRed,50,255);
+        
     }
 
     else{
+        
         setHue(4,true,255,100,0.33);
+        
 
     } 
          
 }
 
 else{
+    
     setHue(4,false);
+    
 }
 
     
