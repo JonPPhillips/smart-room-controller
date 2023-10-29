@@ -1,9 +1,7 @@
 /* 
- * Project myProject
- * Author: Your Name
- * Date: 
- * For comprehensive documentation and examples, please visit:
- * https://docs.particle.io/firmware/best-practices/firmware-template/
+ * Project Smart Room Controller
+ * Author: Jon Phillips
+ * Date: 28 Oct 2023
  */
 
 #include "Particle.h"
@@ -65,7 +63,7 @@ void setup() {
     
 
     Serial.begin(9600);
-    waitFor(Serial.isConnected,15000);
+    waitFor(Serial.isConnected,5000);
 
     WiFi.on();
     WiFi.clearCredentials();
@@ -93,23 +91,15 @@ void setup() {
     display.setTextColor(WHITE);
     display.clearDisplay();
 
-  
-
-
-
-    
-
 
 }
 
 
 void loop() {
 
-
-
 currTime = millis();
 tempC = bme.readTemperature();
-tempF = map(tempC,0,100,32,212);
+tempF = (tempC*9/5+32);
 encRead = enCoder.read();
 thermoSet = map(encRead,0,96,60,100);
 cool = false;
@@ -152,10 +142,7 @@ if(heat){
 if(counterHeat == 1){
     tone(BUZZER, 3300,1000);
    
-}
-
-
-    
+}    
 
 if(cool){
     wemoWrite(wemoCool,HIGH);
